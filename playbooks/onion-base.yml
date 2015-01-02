@@ -1,0 +1,13 @@
+---
+- name: Configure onion
+  hosts: onion2
+  sudo: True
+  tasks:
+  - name: Configure MySQL not to prompt for root password
+    command: 'echo "debconf debconf/frontend select noninteractive" | sudo debconf-set-selections'
+  - name: Add securityonion/stable repo
+    apt_repository: repo='ppa:securityonion/stable' update_cache=yes
+  - name: Install python-software-properties
+    apt: name:python-software-properties update_cache=yes
+  - name: Install security-onion
+    apt: name:securityonion-all update_cache=yes
