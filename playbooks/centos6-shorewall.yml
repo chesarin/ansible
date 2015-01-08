@@ -1,0 +1,70 @@
+---
+- name: Configure Syslog-NG
+  hosts: test1
+  sudo: True
+  vars:
+    osversion: 6
+    arch: x86_64
+    packagev: 6-8
+  tasks:
+    - name: Remove rsyslog
+      yum: name=rsyslog state=absent
+    - name: Remove syslog
+      yum: name=syslog state=absent
+    - name: Install Epel rpm
+      yum: name="http://dl.fedoraproject.org/pub/epel/{{ osversion }}/{{ arch }}/epel-release-{{ packagev }}.noarch.rpm" state=present
+    - name: Fix the issue with Epel
+      shell: "sed -i 's/mirrorlist=https/mirrorlist=http/' /etc/yum.repos.d/epel.repo"
+    - name: Install syslog-ng
+      yum: name=syslog-ng state=latest
+    - name: Install syslog-ng-libdbi
+      yum: name=syslog-ng-libdbi state=latest
+    - name: Enable syslog-ng 
+      shell: "/sbin/chkconfig syslog-ng on"
+    - name: Start syslog-ng
+      service: name=syslog-ng state=started
+
+- name: Install shorewall
+  hosts: test1
+  sudo: True
+  vars:
+    majorv: 4.6
+    minorv: 4.6.5
+    packagev: 4.6.5-3
+    wan: eth0
+    lan: eth1
+    cust: 192.168.69.1,192.168.69.2
+    operations: 10.10.10.52
+    dbserver: 192.168.69.3
+    pentest: 172.16.0.20
+  tasks:
+    - name: Install libselinux-python
+      yum: name=libselinux-python
+    - name: Install shorewall core
+      yum: name="http://www.shorewall.net/pub/shorewall/{{ majorv }}/shorewall-{{ minorv }}/shorewall-core-{{ packagev }}.noarch.rpm" state=present
+    - name: Install shorewall main binary
+      yum: name="http://www.shorewall.net/pub/shorewall/{{ majorv }}/shorewall-{{ minorv }}/shorewall-{{ packagev }}.noarch.rpm" state=present
+    - name: Copy two interfaces skeleton
+      shell: "/bin/cp /usr/share/doc/packages/shorewall-{{ minorv }}/Samples/two-interfaces/* /etc/shorewall/"
+    - name: Copy interfaces template
+      template: src=templates/shorewall/interfaces.j2 dest=/etc/shorewall/interfaces
+    - name: Copy hosts template
+      template: src=templates/shorewall/hosts.j2 dest=/etc/shorewall/hosts
+    - name: Copy zones, rules, policy and macros files
+      copy: src=files/shorewall/web-servers/ dest=/etc/shorewall
+    - name: Copy shorewall configuration file to remote server
+      copy: src=files/shorewall/config/shorewall.conf-back  dest=/etc/shorewall/shorewall.conf
+    - name: Create the /var/log/iptables file
+      file: path=/var/log/iptables state=touch
+    - name: Stop iptables service
+      service: name=iptables state=stopped
+    - name: Start shorewall service
+      service: name=shorewall state=started
+    - name: Disable iptables service from starting on bootup
+      shell: "/sbin/chkconfig iptables off"
+    - name: Disable ip6tables service from starting on bootup
+      shell: "/sbin/chkconfig ip6tables off"
+    - name: Enable shorewall service to start on bootup
+      shell: "/sbin/chkconfig shorewall on"
+    - name: 'Finale rebooting the server'
+      command: "shutdown -r now"
