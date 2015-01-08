@@ -1,0 +1,9 @@
+---
+- name: Install latest packages
+  hosts: test1
+  sudo: True
+  tasks:
+  - name: Install Latest Packages
+    yum: name=* state=latest
+  - name: Restart server to apply latest patches
+    command: /sbin/shutdown -r now
