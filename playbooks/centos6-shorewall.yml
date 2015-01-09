@@ -7,6 +7,8 @@
     arch: x86_64
     packagev: 6-8
   tasks:
+    - name: Install libselinux-python
+      yum: name=libselinux-python
     - name: Remove rsyslog
       yum: name=rsyslog state=absent
     - name: Remove syslog
@@ -19,8 +21,12 @@
       yum: name=syslog-ng state=latest
     - name: Install syslog-ng-libdbi
       yum: name=syslog-ng-libdbi state=latest
+    - name: Create the /var/log/iptables file
+      file: path=/var/log/iptables state=touch
     - name: Enable syslog-ng 
       shell: "/sbin/chkconfig syslog-ng on"
+    - name: Copy master syslog-ng config file
+      copy: src=files/syslog-ng/master.conf dest=/etc/syslog-ng/syslog-ng.conf
     - name: Start syslog-ng
       service: name=syslog-ng state=started
 
@@ -66,5 +72,23 @@
       shell: "/sbin/chkconfig ip6tables off"
     - name: Enable shorewall service to start on bootup
       shell: "/sbin/chkconfig shorewall on"
-    - name: 'Finale rebooting the server'
-      command: "shutdown -r now"
+#     - name: 'Finale rebooting the server'
+#       command: "shutdown -r now"
+
+- name: Install and Configure PSAD
+  hosts: test1
+  sudo: True
+  tasks:
+    - name: Install Requirements for psad
+      yum: name={{item}} state=latest
+      with_items:
+        - perl-Bit-Vector
+        - perl-Date-Calc
+        - perl-IPTables-ChainMgr
+        - perl-IPTables-Parse
+        - perl-NetAddr-IP
+        - perl-Unix-Syslog
+        - gcc
+        - mailx
+    - name: Upload psad tar file
+      unarchive: src=files/psad/psad-2.2.3.tar.gz dest=/tmp
