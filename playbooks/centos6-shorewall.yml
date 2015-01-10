@@ -6,6 +6,7 @@
     osversion: 6
     arch: x86_64
     packagev: 6-8
+    logserver: 10.10.10.114
   tasks:
     - name: Install libselinux-python
       yum: name=libselinux-python
@@ -25,8 +26,8 @@
       file: path=/var/log/iptables state=touch
     - name: Enable syslog-ng 
       shell: "/sbin/chkconfig syslog-ng on"
-    - name: Copy master syslog-ng config file
-      copy: src=files/syslog-ng/master.conf dest=/etc/syslog-ng/syslog-ng.conf
+    - name: Copy master syslog-ng config template
+      template: src=templates/syslog-ng/master.j2 dest=/etc/syslog-ng/syslog-ng.conf
     - name: Start syslog-ng
       service: name=syslog-ng state=started
 
@@ -78,6 +79,12 @@
 - name: Install and Configure PSAD
   hosts: test1
   sudo: True
+  vars:
+    psad_version : '2.2.3'
+    psad_host : test1
+    psad_email : test@test.com
+    psad_syslog : '/var/log/iptables'
+    psadwatchd_enable : 'Y'
   tasks:
     - name: Install Requirements for psad
       yum: name={{item}} state=latest
@@ -90,5 +97,19 @@
         - perl-Unix-Syslog
         - gcc
         - mailx
+        - make
+        - wget
     - name: Upload psad tar file
-      unarchive: src=files/psad/psad-2.2.3.tar.gz dest=/tmp
+      unarchive: src=files/psad/psad-{{psad_version}}.tar.gz dest=/tmp
+    - name: Copy config.aswers to server
+      copy: src=files/psad/config/install.answers-1 dest=/tmp/install.answers
+    - name: Install PSAD
+      shell: "cd /tmp/psad-{{psad_version}} && ./install.pl -U -a /tmp/install.answers"
+    - name: Enable PSAD on reboot
+      shell: "chkconfig psad on"
+    - name: Copy hosts template
+      template: src=templates/psad/psad.j2 dest=/etc/psad/psad.conf
+    - name: Install psad.conf template
+      fetch: src=/etc/psad/psad.conf dest=files/psad/psad.conf
+    - name: Start psad service
+      service: name=psad state=started
