@@ -7,7 +7,7 @@
  - name: Remove syslog
    yum: name=syslog state=absent
  - name: Install Epel rpm
-   yum: name="http://dl.fedoraproject.org/pub/epel/{{ osversion }}/{{ arch }}/epel-release-{{ packagev }}.noarch.rpm" state=present
+   yum: name="http://dl.fedoraproject.org/pub/epel/{{ osversion }}/{{ arch }}/epel-release-{{ epelversion }}.noarch.rpm" state=present
  - name: Fix the issue with Epel
    shell: "sed -i 's/mirrorlist=https/mirrorlist=http/' /etc/yum.repos.d/epel.repo"
  - name: Install syslog-ng

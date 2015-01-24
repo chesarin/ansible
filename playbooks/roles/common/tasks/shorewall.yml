@@ -1,11 +1,11 @@
 - name: Install libselinux-python
   yum: name=libselinux-python
 - name: Install shorewall core
-  yum: name="http://www.shorewall.net/pub/shorewall/{{ majorv }}/shorewall-{{ minorv }}/shorewall-core-{{ packagev }}.noarch.rpm" state=present
+  yum: name="http://www.shorewall.net/pub/shorewall/{{ shorewallmajorv }}/shorewall-{{ shorewallminorv }}/shorewall-core-{{ shorewallver }}.noarch.rpm" state=present
 - name: Install shorewall main binary
-  yum: name="http://www.shorewall.net/pub/shorewall/{{ majorv }}/shorewall-{{ minorv }}/shorewall-{{ packagev }}.noarch.rpm" state=present
+  yum: name="http://www.shorewall.net/pub/shorewall/{{ shorewallmajorv }}/shorewall-{{ shorewallminorv }}/shorewall-{{ shorewallver }}.noarch.rpm" state=present
 - name: Copy two interfaces skeleton
-  shell: "/bin/cp /usr/share/doc/packages/shorewall-{{ minorv }}/Samples/two-interfaces/* /etc/shorewall/"
+  shell: "/bin/cp /usr/share/doc/packages/shorewall-{{ shorewallminorv }}/Samples/two-interfaces/* /etc/shorewall/"
 - name: Copy interfaces template
   template: src=interfaces.j2 dest=/etc/shorewall/interfaces
 - name: Copy hosts template

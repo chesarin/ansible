@@ -9,8 +9,8 @@
 ###############################################################################
 #ZONE	HOST(S)					OPTIONS
 #Customer applicastions and db server
-cust	{{ lan }}:{{ cust }}		broadcast
+cust	{{ lan }}:{{ custservers }}		broadcast
 cudb	{{ lan }}:{{ dbserver }}	broadcast
 #Operations zone and pentester zone
-ops	{{ lan }}:{{ operations }}	broadcast
-pent	{{ lan }}:{{ pentest }}		broadcast
+ops	{{ lan }}:{{ operationservers }}	broadcast
+pent	{{ lan }}:{{ pentestservers }}		broadcast

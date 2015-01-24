@@ -1,14 +1,14 @@
 ---
  osversion: 6
  arch: x86_64
- packagev: 6-8
+ epelversion: 6-8
  logserver: 10.10.10.114
- majorv: 4.6
- minorv: 4.6.5
- packagev: 4.6.5-3
+ shorewallmajorv: 4.6
+ shorewallminorv: 4.6.5
+ shorewallver: 4.6.5-3
  wan: eth0
  lan: eth1
- cust: 192.168.69.1,192.168.69.2
- operations: 10.10.10.52
+ custservers: 192.168.69.1,192.168.69.2
+ operationservers: 10.10.10.52
  dbserver: 192.168.69.3
- pentest: 172.16.0.20
+ pentestservers: 172.16.0.20
