@@ -1,0 +1,15 @@
+- name: Install libselinux-python
+  yum: name={{item}} state=latest
+  with_items:
+    - libselinux-python
+    - wget
+#Get the latest script from https://www.atomicorp.com/installers/atomic and modify line 38
+- name: Upload and execute atomic script to configure repo
+  script: ossec/repo/atomic-installer
+- name: Install ossec from atomic repo
+  yum: name={{item}} state=latest
+  with_items:
+    - ossec-hids
+    - ossec-hids-server
+- name: Enable ossec-hids to start at bootup 
+  shell: "/sbin/chkconfig ossec-hids on"
