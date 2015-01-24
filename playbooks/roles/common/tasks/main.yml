@@ -1,0 +1,3 @@
+---
+tasks:
+  - include: syslog-ng.yml

@@ -1,0 +1,5 @@
+---
+ osversion: 6
+ arch: x86_64
+ packagev: 6-8
+ logserver: 10.10.10.114

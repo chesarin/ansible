@@ -1,0 +1,24 @@
+---
+#basic setup to install based system with syslog-ng, epel and iptables log file
+ - name: Install libselinux-python
+   yum: name=libselinux-python
+ - name: Remove rsyslog
+   yum: name=rsyslog state=absent
+ - name: Remove syslog
+   yum: name=syslog state=absent
+ - name: Install Epel rpm
+   yum: name="http://dl.fedoraproject.org/pub/epel/{{ osversion }}/{{ arch }}/epel-release-{{ packagev }}.noarch.rpm" state=present
+ - name: Fix the issue with Epel
+   shell: "sed -i 's/mirrorlist=https/mirrorlist=http/' /etc/yum.repos.d/epel.repo"
+ - name: Install syslog-ng
+   yum: name=syslog-ng state=latest
+ - name: Install syslog-ng-libdbi
+   yum: name=syslog-ng-libdbi state=latest
+ - name: Create the /var/log/iptables file
+   file: path=/var/log/iptables state=touch
+ - name: Enable syslog-ng 
+   shell: "/sbin/chkconfig syslog-ng on"
+ - name: Copy master syslog-ng config template
+   template: src=syslogng-slave.j2 dest=/etc/syslog-ng/syslog-ng.conf
+ - name: Start syslog-ng
+   service: name=syslog-ng state=started
