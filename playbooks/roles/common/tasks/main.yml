@@ -2,4 +2,4 @@
 - include: syslog-ng.yml
 - include: shorewall.yml
 - include: psad.yml
-- include: ossec.yml
+# - include: ossec.yml
