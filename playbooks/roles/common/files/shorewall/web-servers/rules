@@ -1,0 +1,68 @@
+#
+# Shorewall version 4.0 - Sample Rules File for two-interface configuration.
+# Copyright (C) 2006,2007 by the Shorewall Team
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# See the file README.txt for further details.
+#------------------------------------------------------------------------------
+# For information about entries in this file, type "man shorewall-rules"
+######################################################################################################################################################################################################
+#ACTION		SOURCE		DEST		PROTO	DEST	SOURCE		ORIGINAL	RATE		USER/	MARK	CONNLIMIT	TIME		HEADERS		SWITCH		HELPER
+#							PORT	PORT(S)		DEST		LIMIT		GROUP
+#SECTION ALL
+#SECTION ESTABLISHED
+#SECTION RELATED
+#SECTION INVALID
+#SECTION UNTRACKED
+SECTION NEW
+
+# customer zone to other zones
+# Allow NFS connections from cust to the FW
+# Allow SSH connections from cust to the FW
+# Allow Ping connections from cst to the FW
+#
+#NFS(ACCEPT)	cust		$FW
+SSH(ACCEPT)	cust		$FW
+Ping(ACCEPT)	cust		$FW
+
+# ops zone to other zones
+# Allow SSH traffic from operations to the Firewall
+# Allow Ping traffic from operation to the Firewall
+# Allow Amanda traffic from operation to the Firewall
+SSH(ACCEPT)	ops		$FW
+Ping(ACCEPT)	ops		$FW
+Amanda(ACCEPT)	ops		$FW
+Syslog(ACCEPT)	ops		$FW	
+
+# lan zone to other zones
+# Allow Ping from the lan to the firewall
+#
+Ping(ACCEPT)	lan		$FW
+
+# wan zone to other zones
+# Don't allow connection pickup from the wan
+# Accept ssh connections from the firewall
+# Accept HTTP connections from the firewall
+# Accept HTTPS connections from the firewall
+# Drop Ping from the "bad" wan zone.. and prevent your log from being flooded..
+#
+Invalid(DROP)	wan		all		tcp
+SSH(ACCEPT)	wan		$FW
+#HTTP(ACCEPT)	wan		$FW
+#HTTPS(ACCEPT)	wan		$FW
+Ping(DROP)	wan		$FW
+
+# FW(Firewall) zone to other zones
+# Accept syslog connection from the Firewall to ops
+# Accept smtp connection from the Firewall to ops
+# Accept NTP connections from the Firewall to ops
+# Accept icmp connection from the Firewall to the lan
+Syslog(ACCEPT)	$FW		ops
+SMTP(ACCEPT)	$FW		ops
+NTP(ACCEPT)	$FW		ops
+ACCEPT		$FW		lan		icmp
+#

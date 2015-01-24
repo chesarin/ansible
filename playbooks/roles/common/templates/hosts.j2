@@ -1,0 +1,16 @@
+#
+# Shorewall version 4 - Hosts file
+#
+# For information about entries in this file, type "man shorewall-hosts"
+#
+# The manpage is also online at
+# http://www.shorewall.net/manpages/shorewall-hosts.html
+#
+###############################################################################
+#ZONE	HOST(S)					OPTIONS
+#Customer applicastions and db server
+cust	{{ lan }}:{{ cust }}		broadcast
+cudb	{{ lan }}:{{ dbserver }}	broadcast
+#Operations zone and pentester zone
+ops	{{ lan }}:{{ operations }}	broadcast
+pent	{{ lan }}:{{ pentest }}		broadcast
