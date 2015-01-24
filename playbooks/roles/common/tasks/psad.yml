@@ -12,12 +12,12 @@
     - make
     - wget
 - name: Upload psad tar file
-  unarchive: src=psad-{{psad_version}}.tar.gz dest=/tmp
+  unarchive: src=psad/binaries/psad-{{psad_version}}.tar.gz dest=/tmp
 - name: Copy config.aswers to server
-  copy: src=install.answers-1 dest=/tmp/install.answers
+  copy: src=psad/config/install.answers-1 dest=/tmp/install.answers
 - name: Install PSAD
   shell: "cd /tmp/psad-{{psad_version}} && ./install.pl -U -a /tmp/install.answers"
 - name: Install psad.conf template
-  template: src=psad.j2 dest=/etc/psad/psad.conf
+  template: src=psad/psad.j2 dest=/etc/psad/psad.conf
 - name: Start psad service
   service: name=psad state=started

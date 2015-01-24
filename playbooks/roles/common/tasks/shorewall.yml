@@ -7,9 +7,9 @@
 - name: Copy two interfaces skeleton
   shell: "/bin/cp /usr/share/doc/packages/shorewall-{{ shorewallminorv }}/Samples/two-interfaces/* /etc/shorewall/"
 - name: Copy interfaces template
-  template: src=interfaces.j2 dest=/etc/shorewall/interfaces
+  template: src=shorewall/interfaces.j2 dest=/etc/shorewall/interfaces
 - name: Copy hosts template
-  template: src=hosts.j2 dest=/etc/shorewall/hosts
+  template: src=shorewall/hosts.j2 dest=/etc/shorewall/hosts
 - name: Copy zones, rules, policy and macros files
   copy: src=shorewall/web-servers/ dest=/etc/shorewall
 - name: Copy shorewall configuration file to remote server

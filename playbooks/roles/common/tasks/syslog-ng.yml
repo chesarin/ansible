@@ -19,6 +19,6 @@
  - name: Enable syslog-ng 
    shell: "/sbin/chkconfig syslog-ng on"
  - name: Copy master syslog-ng config template
-   template: src=syslogng-slave.j2 dest=/etc/syslog-ng/syslog-ng.conf
+   template: src=syslogng/syslogng-slave.j2 dest=/etc/syslog-ng/syslog-ng.conf
  - name: Start syslog-ng
    service: name=syslog-ng state=started
