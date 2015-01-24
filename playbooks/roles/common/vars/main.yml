@@ -12,3 +12,8 @@
  operationservers: 10.10.10.52
  dbserver: 192.168.69.3
  pentestservers: 172.16.0.20
+ psad_version : '2.2.3'
+ psad_host : test1
+ psad_email : test@test.com
+ psad_syslog : '/var/log/iptables'
+ psadwatchd_enable : 'Y'

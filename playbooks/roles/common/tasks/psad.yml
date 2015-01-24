@@ -1,0 +1,23 @@
+- name: Install Requirements for psad
+  yum: name={{item}} state=latest
+  with_items:
+    - perl-Bit-Vector
+    - perl-Date-Calc
+    - perl-IPTables-ChainMgr
+    - perl-IPTables-Parse
+    - perl-NetAddr-IP
+    - perl-Unix-Syslog
+    - gcc
+    - mailx
+    - make
+    - wget
+- name: Upload psad tar file
+  unarchive: src=psad-{{psad_version}}.tar.gz dest=/tmp
+- name: Copy config.aswers to server
+  copy: src=install.answers-1 dest=/tmp/install.answers
+- name: Install PSAD
+  shell: "cd /tmp/psad-{{psad_version}} && ./install.pl -U -a /tmp/install.answers"
+- name: Install psad.conf template
+  template: src=psad.j2 dest=/etc/psad/psad.conf
+- name: Start psad service
+  service: name=psad state=started

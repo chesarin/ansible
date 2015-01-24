@@ -1,3 +1,4 @@
 ---
 - include: syslog-ng.yml
 - include: shorewall.yml
+- include: psad.yml
